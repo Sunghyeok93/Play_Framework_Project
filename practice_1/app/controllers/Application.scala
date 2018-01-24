@@ -1,13 +1,25 @@
 package controllers
 
-import javax.inject.Inject
+import javax.inject._
 
-import play.api.mvc.{AbstractController, Action, Controller, ControllerComponents}
-import services.Counter
+import models.Product
+import play.api.mvc._
 
-class Application extends Controller{
+/**
+ * This controller creates an `Action` to handle HTTP requests to the
+ * application's home page.
+ */
+@Singleton
+class Application @Inject() extends Controller {
 
+  /**
+   * Create an Action to render an HTML page with a welcome message.
+   * The configuration in the `routes` file means that this method
+   * will be called when the application receives a `GET` request with
+   * a path of `/`.
+   */
   def index = Action {
     Redirect(routes.Products.list())
   }
+
 }
