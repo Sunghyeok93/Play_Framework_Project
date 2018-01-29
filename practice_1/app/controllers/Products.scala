@@ -1,11 +1,13 @@
 package controllers
 
 import javax.inject.Inject
+
+import com.sun.tools.javac.util.Name.Table
 import models.Product
-import play.api.i18n.{I18nSupport, MessagesApi, Messages}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import play.api.data.Form
-import play.api.data.Forms.{mapping, longNumber, nonEmptyText}
+import play.api.data.Forms.{longNumber, mapping, nonEmptyText}
 
 
 class Products @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport{
@@ -47,6 +49,7 @@ class Products @Inject() (val messagesApi: MessagesApi) extends Controller with 
       }
     )
   }
+
 
   def newProduct = Action { implicit request =>
     val form = if (request2flash.get("error").isDefined)
