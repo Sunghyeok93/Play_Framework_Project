@@ -6,6 +6,6 @@ class JsonController {
 
   val json: JsValue = Json.parse(
     """
-       
+
     """.stripMargin)
 }
