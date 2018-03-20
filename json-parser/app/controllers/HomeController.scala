@@ -7,6 +7,7 @@ import play.api.Logger
 import play.api.libs.json.{JsError, JsSuccess}
 import play.api.mvc._
 import play.libs.Scala
+import play.libs.ws.WS
 
 import scala.io.Source
 
@@ -33,16 +34,16 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     //Logger.error(parser.tool + parser.version + parser.java)
     Logger.error("here")
 
-    parser1.validate
+    Ok(parser1.validate)
 
-    parser2.inputTest match
+    /*parser2.inputTest match
     {
-      case s: JsSuccess[String] => System.out.println("Success : " +  s.get)
-      case e: JsError => System.out.println("Error : " + JsError.toJson(e).toString())
+      case s: JsSuccess[String] => Ok("Success : " +  s.get)
+      case e: JsError => Ok("Error : " + JsError.toJson(e).toString())
     }
-
+*/
     //val testCode = parser.lat
-    Ok(parser1.toString)
+    //Ok(parser1.toString)
   }
 
 }
