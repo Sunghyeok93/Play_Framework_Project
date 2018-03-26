@@ -22,7 +22,14 @@ class jsonParser(jsonString: String) {
       (JsPath \ "range").read[String] and
       (JsPath \ "punctuation").read[String])(Parameter.apply _)
 
-  implicit val optionReads: Reads[Option] = (
+  implicit val parameterWrites : Writes[Parameter] = (
+    (JsPath \ "min").write[Int] and
+      (JsPath \ "max").write[Int] and
+      (JsPath \ "values").write[Seq[String]] and
+      (JsPath \ "range").write[String] and
+      (JsPath \ "punctuation").write[String])(unlift(Parameter.unapply))
+
+  implicit val optionReads : Reads[Option] = (
     (JsPath \ "name").read[String] and
       (JsPath \ "values").read[Seq[String]] and
       (JsPath \ "mandatory").read[Boolean] and
@@ -30,6 +37,15 @@ class jsonParser(jsonString: String) {
       (JsPath \ "parameter").read[Parameter] and
       (JsPath \ "flag").read[Boolean] and
       (JsPath \ "options").readNullable[Seq[Option]])(Option.apply _)
+
+  implicit val optionWrites : Writes[Option] = (
+    (JsPath \ "name").write[String] and
+      (JsPath \ "values").write[Seq[String]] and
+      (JsPath \ "mandatory").write[Boolean] and
+      (JsPath \ "duplicated").write[Boolean] and
+      (JsPath \ "parameter").write[Parameter] and
+      (JsPath \ "flag").write[Boolean] and
+      (JsPath \ "options").writeNullable[Seq[Option]])(unlift(Option.unapply))
 
   implicit val inputReads: Reads[Input] = (
     (JsPath \ "name").read[String] and
@@ -58,13 +74,22 @@ class jsonParser(jsonString: String) {
       (JsPath \ "subCommands").read[Seq[SubCommand]])(Tool.apply _)
 
 
-  def validate : String =
-  {
-    //val test : JsResult[Tool]= json.validate[Tool]
-    var result : String = ""
+  def validate : Boolean = {
+    val validateJson : JsResult[Tool]= json.validate[Tool]
 
-    //Tool class를 이용하여 json 파싱
-    val tool : Tool = (json).as[Tool]
+    validateJson match
+    {
+      case s: JsSuccess[String] => true
+      case e: JsError => false
+    }
+
+  }
+
+  def printJson: String =
+  {
+    var result : String = ""
+    val tool: Tool = (json).as[Tool]
+
     result = result + "toolName           : " + tool.name + '\n'
     result = result + "toolVersion        : " + tool.version + '\n'
     result = result + "toolJava           : " + tool.java + '\n'
@@ -129,6 +154,11 @@ class jsonParser(jsonString: String) {
       result = result + "----------------------------------------------------------------------------" + '\n'
     }
     result
+  }
+
+  def sendJson() : Boolean =
+  {
+    true
   }
 
   val inputTest: JsResult[Input] = json.validate[Input]

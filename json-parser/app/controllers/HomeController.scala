@@ -27,15 +27,20 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
   def index = Action {
 
     val s1 = Source.fromFile("/Users/sunghyeok/Jsonfile/test.json").mkString
-    val s2 = Source.fromFile("/Users/sunghyeok/Jsonfile/test2.json").mkString
+    //val s2 = Source.fromFile("/Users/sunghyeok/Jsonfile/test2.json").mkString
     val parser1 = new jsonParser(s1)
-    val parser2 = new jsonParser(s2)
+    //val parser2 = new jsonParser(s2)
 
     //Logger.error(parser.tool + parser.version + parser.java)
     Logger.error("here")
 
-    Ok(parser1.validate)
-
+    if(parser1.validate) {
+      parser1.sendJson
+      Ok(parser1.printJson)
+    }
+    else {
+      Ok("json parsing failed")
+    }
     /*parser2.inputTest match
     {
       case s: JsSuccess[String] => Ok("Success : " +  s.get)
